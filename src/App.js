@@ -470,9 +470,9 @@ const HomePage = ({ onNavigate }) => {
     return (
         <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-20"
+            className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-40"
         >
-            <div className="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center">
                 {/* HERO SECTION - REDUCED SIZE & SPACING */}
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-4 relative">
                     <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10">
@@ -485,7 +485,7 @@ const HomePage = ({ onNavigate }) => {
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, duration: 1, type: "spring" }}
                     className="mb-4 relative flex items-center justify-center w-full"
                 >
-                    <div style={{ transform: 'scale(0.5)' }}>
+                    <div style={{ transform: 'scale(0.75)' }}>
                         <div className="scene">
                             <div className="prism">
                                 <div className="facet" style={{transform: 'rotateY(0deg) translateZ(40px)'}}></div>

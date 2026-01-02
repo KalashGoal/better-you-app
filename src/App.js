@@ -3,8 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, Quote, RefreshCw, Volume2, Sparkles, X, Terminal, Zap, BookOpen, Layers } from 'lucide-react';
 
 /* =========================================
-   OFFLINE DATA: DON'T SAY 'VERY' DICTIONARY
-   (Replaces Gemini API with static high-quality data)
+   GLOBAL CONFIG
+   ========================================= */
+// Note: Leave empty to force Offline Mode. 
+// If you want to use Gemini, you would need to set this up in Vercel Environment Variables.
+const apiKey = ""; 
+
+/* =========================================
+   DATA: DON'T SAY 'VERY' DICTIONARY (OFFLINE)
    ========================================= */
 const VERY_DATA = {
   "accurate": { word: "Exact", type: "Adj", uk: "/ɪɡˈzakt/", us: "/ɪɡˈzækt/", def: "Not approximated in any way; precise.", ety: "Latin 'exactus' (perfected).", examples: ["The description was exact in every detail.", "We need exact figures for the report."] },
@@ -83,15 +89,12 @@ const VERY_DATA = {
 };
 
 /* =========================================
-   DATA: VOCAB SLIDER EMOTIONS (Updated)
+   DATA: VOCAB SLIDER EMOTIONS
    ========================================= */
 const EMOTIONS_DATA = [
-  // Keeping standard emotions, refining Jealous as requested
   { id: 'happy', label: 'Happy', color: '#FBBF24', levels: [{ word: 'Content', definition: 'Peacefully happy and satisfied.' }, { word: 'Pleased', definition: 'Feeling satisfaction and enjoyment.' }, { word: 'Cheerful', definition: 'Noticeably happy and optimistic.' }, { word: 'Joyful', definition: 'Feeling, expressing, or causing great pleasure.' }, { word: 'Delighted', definition: 'Feeling or showing great pleasure.' }, { word: 'Elated', definition: 'Ecstatically happy and full of excitement.' }, { word: 'Euphoric', definition: 'Intense, overwhelming excitement.' }, { word: 'Ecstatic', definition: 'Overwhelming happiness or joyful excitement.' }] },
   { id: 'sad', label: 'Sad', color: '#60A5FA', levels: [{ word: 'Down', definition: 'Unhappy; low in spirits.' }, { word: 'Blue', definition: 'Melancholic or depressed.' }, { word: 'Upset', definition: 'Unhappy, disappointed, or worried.' }, { word: 'Unhappy', definition: 'Not happy; sad.' }, { word: 'Gloomy', definition: 'Feeling distressed or pessimistic.' }, { word: 'Miserable', definition: 'Wretchedly unhappy or uncomfortable.' }, { word: 'Despondent', definition: 'In low spirits from loss of hope.' }, { word: 'Desolate', definition: 'Feeling extreme unhappiness or loneliness.' }] },
   { id: 'angry', label: 'Angry', color: '#EF4444', levels: [{ word: 'Annoyed', definition: 'Slightly angry; irritated.' }, { word: 'Cross', definition: 'Annoyed or irritated.' }, { word: 'Frustrated', definition: 'Feeling distress from an inability to change something.' }, { word: 'Mad', definition: 'Very angry.' }, { word: 'Angry', definition: 'Feeling or showing strong annoyance or hostility.' }, { word: 'Furious', definition: 'Extremely angry.' }, { word: 'Livid', definition: 'Furiously angry.' }, { word: 'Enraged', definition: 'Filled with consuming, uncontrollable anger.' }] },
-  { id: 'jealous', label: 'Jealous', color: '#10B981', levels: [{ word: 'Envious', definition: 'Feeling or showing envy.' }, { word: 'Bitter', definition: 'Feeling deep anger or pain.' }, { word: 'Jealous', definition: 'Feeling envy of someone or their achievements.' }, { word: 'Covetous', definition: 'Having or showing a great desire to possess something belonging to someone else.' }, { word: 'Resentful', definition: 'Feeling bitterness at having been treated unfairly.' }, { word: 'Possessive', definition: 'Demanding someone\'s total attention and love.' }] },
-  // ... (Other emotions remain similar for brevity in this block, ensuring all are present in render)
   { id: 'anxious', label: 'Anxious', color: '#A78BFA', levels: [{ word: 'Worried', definition: 'Anxious or troubled about actual or potential problems.' }, { word: 'Nervous', definition: 'Easily agitated or alarmed.' }, { word: 'Uneasy', definition: 'Causing or feeling anxiety; troubled.' }, { word: 'Tense', definition: 'Unable to relax because of nervousness.' }, { word: 'Anxious', definition: 'Experiencing worry, unease, or nervousness.' }, { word: 'Distressed', definition: 'Suffering from extreme anxiety, sorrow, or pain.' }, { word: 'Panicked', definition: 'Feeling uncontrollable fear or anxiety.' }] },
   { id: 'calm', label: 'Calm', color: '#34D399', levels: [{ word: 'Mellow', definition: 'Pleasantly smooth or soft; free from harshness.' }, { word: 'Relaxed', definition: 'Free from tension and anxiety.' }, { word: 'Calm', definition: 'Not showing or feeling nervousness, anger, or other emotions.' }, { word: 'Peaceful', definition: 'Free from disturbance; tranquil.' }, { word: 'Serene', definition: 'Calm, peaceful, and untroubled.' }, { word: 'Tranquil', definition: 'Free from disturbance; calm.' }, { word: 'Blissful', definition: 'Extremely happy; full of joy and complete peace.' }, { word: 'Zen', definition: 'Relaxed and not worrying about things.' }] },
   { id: 'inspired', label: 'Inspired', color: '#F472B6', levels: [{ word: 'Curious', definition: 'Eager to know or learn something.' }, { word: 'Interested', definition: 'Showing curiosity or concern.' }, { word: 'Motivated', definition: 'Stimulated to do something; enthusiastic.' }, { word: 'Eager', definition: 'Wanting to do or have something very much.' }, { word: 'Inspired', definition: 'Filled with the urge or ability to do something creative.' }, { word: 'Driven', definition: 'Operated, moved, or controlled by a specified force.' }, { word: 'Visionary', definition: 'Thinking about or planning the future with imagination.' }] },
@@ -103,6 +106,7 @@ const EMOTIONS_DATA = [
   { id: 'proud', label: 'Proud', color: '#EAB308', levels: [{ word: 'Glad', definition: 'Pleased; delighted.' }, { word: 'Satisfied', definition: 'Contented; pleased.' }, { word: 'Proud', definition: 'Feeling deep pleasure as a result of achievements.' }, { word: 'Honored', definition: 'Regarded with great respect.' }, { word: 'Triumphant', definition: 'Having won a battle or contest; victorious.' }, { word: 'Glorious', definition: 'Having, worthy of, or bringing fame.' }] },
   { id: 'compassionate', label: 'Compassionate', color: '#FB7185', levels: [{ word: 'Nice', definition: 'Pleasant; agreeable; satisfactory.' }, { word: 'Kind', definition: 'Friendly, generous, and considerate.' }, { word: 'Caring', definition: 'Displaying kindness and concern for others.' }, { word: 'Sympathetic', definition: 'Feeling, showing, or expressing sympathy.' }, { word: 'Empathetic', definition: 'Understanding and sharing the feelings of another.' }, { word: 'Selfless', definition: 'Concerned more with the needs of others than one\'s own.' }] },
   { id: 'afraid', label: 'Afraid', color: '#4B5563', levels: [{ word: 'Nervous', definition: 'Easily agitated or alarmed.' }, { word: 'Worried', definition: 'Anxious or troubled.' }, { word: 'Scared', definition: 'Fearful; frightened.' }, { word: 'Afraid', definition: 'Feeling fear or anxiety.' }, { word: 'Terrified', definition: 'Cause to feel extreme fear.' }, { word: 'Petrified', definition: 'So frightened that one is unable to move.' }, { word: 'Horrified', definition: 'Filled with horror; extremely shocked.' }] },
+  { id: 'jealous', label: 'Jealous', color: '#10B981', levels: [{ word: 'Envious', definition: 'Feeling or showing envy.' }, { word: 'Bitter', definition: 'Feeling deep anger or pain.' }, { word: 'Jealous', definition: 'Feeling envy of someone or their achievements.' }, { word: 'Covetous', definition: 'Having or showing a great desire to possess something belonging to someone else.' }, { word: 'Resentful', definition: 'Feeling bitterness at having been treated unfairly.' }, { word: 'Possessive', definition: 'Demanding someone\'s total attention and love.' }] },
   { id: 'surprised', label: 'Surprised', color: '#F97316', levels: [{ word: 'Startled', definition: 'Feeling sudden shock or alarm.' }, { word: 'Surprised', definition: 'Feeling or showing surprise.' }, { word: 'Shocked', definition: 'Cause (someone) to feel surprised and upset.' }, { word: 'Amazed', definition: 'Greatly surprised; astonished.' }, { word: 'Stunned', definition: 'Astonished or shocked so that one is temporarily unable to react.' }, { word: 'Mind-blown', definition: 'Extremely impressed or overwhelmed.' }] },
   { id: 'disgusted', label: 'Disgusted', color: '#84CC16', levels: [{ word: 'Displeased', definition: 'Feeling or showing annoyance and displeasure.' }, { word: 'Grossed Out', definition: 'Feeling distinct disgust.' }, { word: 'Disgusted', definition: 'Feeling or expressing revulsion or strong disapproval.' }, { word: 'Repulsed', definition: 'Cause to feel intense distaste and aversion.' }, { word: 'Sickened', definition: 'Make (someone) feel sick or disgusted.' }] },
   { id: 'confused', label: 'Confused', color: '#8B5CF6', levels: [{ word: 'Uncertain', definition: 'Not able to be relied on; not known or definite.' }, { word: 'Lost', definition: 'Unable to find one\'s way; not knowing what to do.' }, { word: 'Confused', definition: 'Unable to think clearly; bewildered.' }, { word: 'Puzzled', definition: 'Unable to understand; perplexed.' }, { word: 'Baffled', definition: 'Totally bewilder or perplex.' }] },
@@ -216,7 +220,6 @@ const DontSayVeryTool = ({ onBack }) => {
             setSuggestion(result.word.toLowerCase());
             setData(result);
         } else {
-            // Fallback for demo if word not in dictionary
             setSuggestion("Searching..."); 
             setData(null);
             setTimeout(() => {
@@ -470,9 +473,9 @@ const HomePage = ({ onNavigate }) => {
     return (
         <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-40"
+            className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-20"
         >
-            <div className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center">
                 {/* HERO SECTION - REDUCED SIZE & SPACING */}
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-4 relative">
                     <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10">
@@ -485,7 +488,7 @@ const HomePage = ({ onNavigate }) => {
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, duration: 1, type: "spring" }}
                     className="mb-4 relative flex items-center justify-center w-full"
                 >
-                    <div style={{ transform: 'scale(0.75)' }}>
+                    <div style={{ transform: 'scale(0.5)' }}>
                         <div className="scene">
                             <div className="prism">
                                 <div className="facet" style={{transform: 'rotateY(0deg) translateZ(40px)'}}></div>

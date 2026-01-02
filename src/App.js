@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, Quote, RefreshCw, Volume2, Sparkles, X, Terminal, Zap, BookOpen, Layers } from 'lucide-react';
+
 /* =========================================
    GLOBAL CONFIG
    ========================================= */
@@ -470,9 +471,9 @@ const HomePage = ({ onNavigate }) => {
     return (
         <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="w-full min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pt-20 pb-40 px-4 md:px-8"
+            className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-20"
         >
-            <div className="relative z-10 w-full max-w-6xl flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center">
                 {/* HERO SECTION - REDUCED SIZE & SPACING */}
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-4 relative">
                     <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10">
@@ -569,6 +570,7 @@ const HomePage = ({ onNavigate }) => {
    ========================================= */
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // VIEW MAPPING FOR GLASS NAV
   const views = ['home', 'vocab', 'very', 'principles', 'quotes'];
@@ -629,23 +631,19 @@ export default function App() {
         }
       `}</style>
 
-{/* =========================================
-          SMART NAVIGATION: DESKTOP VS MOBILE
-          ========================================= */}
-      
-      {/* DESKTOP NAV: Horizontal Glass Bar (Hidden on Mobile) */}
-      <div className="hidden md:flex fixed bottom-8 left-0 right-0 z-50 justify-center pointer-events-none">
+      {/* DESKTOP NAV (Hidden on Mobile) */}
+      <div className="fixed bottom-8 left-0 right-0 z-50 justify-center pointer-events-none hidden md:flex">
           <div className="glass-nav-container pointer-events-auto">
               <div 
                   className="glass-glider" 
-                  style={{ transform: `translateX(${activeIndex * 100}%)`, width: '120px' }} 
+                  style={{ transform: `translateX(${activeIndex * 100}%)`, width: '120px' }} // Dynamic Slide
               />
               {views.map((view) => (
                   <div 
                     key={view}
                     className={`glass-nav-item ${currentView === view ? 'active' : ''}`}
                     onClick={() => setCurrentView(view)}
-                    style={{ width: '120px' }}
+                    style={{ width: '120px' }} // Fixed width for alignment with calculation
                   >
                       {view === 'very' ? 'Don\'t' : view.charAt(0).toUpperCase() + view.slice(1)}
                   </div>
@@ -653,51 +651,39 @@ export default function App() {
           </div>
       </div>
 
-      {/* MOBILE NAV: Bottom Right Floating Button (Visible only on Mobile) */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+      {/* MOBILE NAV (Hidden on Desktop) */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-end gap-4">
           <AnimatePresence>
-            {/* Using a simple state toggle for mobile menu would require a new state variable. 
-                For simplicity in this step, we will use a purely CSS hover/focus approach or 
-                you can just stick to this simple vertical stack that is always accessible: */}
-            
-            {/* This is the Main Toggle Button */}
-            <button 
-              className="w-14 h-14 bg-white text-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center justify-center active:scale-90 transition-transform"
-              onClick={() => {
-                 // Simple toggle logic using DOM or State
-                 const menu = document.getElementById('mobile-menu-items');
-                 if(menu) menu.classList.toggle('hidden');
-                 if(menu) menu.classList.toggle('flex');
-              }}
-            >
-              <Menu size={24} />
-            </button>
-
-             {/* The Menu Items (Hidden by default, toggled by the button above) */}
-            <div id="mobile-menu-items" className="hidden flex-col gap-3 absolute bottom-20 right-0 items-end">
-              {views.map((view) => (
-                <motion.button
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  key={view}
-                  onClick={() => {
-                    setCurrentView(view);
-                    document.getElementById('mobile-menu-items').classList.add('hidden');
-                    document.getElementById('mobile-menu-items').classList.remove('flex');
-                  }}
-                  className={`px-6 py-3 rounded-full border backdrop-blur-md shadow-xl text-sm font-bold uppercase tracking-widest transition-all
-                    ${currentView === view 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-black/80 text-gray-400 border-gray-800'}`}
-                >
-                  {view === 'very' ? 'Don\'t' : view.charAt(0).toUpperCase() + view.slice(1)}
-                </motion.button>
-              ))}
-            </div>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-gray-800 rounded-2xl p-2 min-w-[160px] shadow-2xl mb-2"
+              >
+                {views.map((view) => (
+                  <button
+                    key={view}
+                    onClick={() => { setCurrentView(view); setIsMobileMenuOpen(false); }}
+                    className={`w-full text-right px-4 py-3 text-sm font-semibold uppercase tracking-widest rounded-xl transition-colors ${currentView === view ? 'text-white bg-white/10' : 'text-gray-500 hover:text-white'}`}
+                  >
+                    {view === 'very' ? 'Don\'t' : view.charAt(0).toUpperCase() + view.slice(1)}
+                  </button>
+                ))}
+              </motion.div>
+            )}
           </AnimatePresence>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
+          >
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </button>
       </div>
 
-      <div className="min-h-screen">
+      {/* MAIN CONTENT WRAPPER */}
+      <div className="w-full min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pt-20 pb-40 px-4 md:px-8">
           <AnimatePresence mode="wait">
               {currentView === 'home' && <HomePage key="home" onNavigate={setCurrentView} />}
               {currentView === 'vocab' && <VocabSliderTool key="vocab" onBack={() => setCurrentView('home')} />}

@@ -5,8 +5,6 @@ import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, 
 /* =========================================
    GLOBAL CONFIG
    ========================================= */
-// Note: Leave empty to force Offline Mode. 
-// If you want to use Gemini, you would need to set this up in Vercel Environment Variables.
 const apiKey = ""; 
 
 /* =========================================
@@ -432,7 +430,7 @@ const VocabSliderTool = ({ onBack }) => {
               <div className="relative text-center min-h-[5rem] flex items-center justify-center">
                 <AnimatePresence mode="wait"><motion.h1 key={selectedEmotion.levels[intensity].word} initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={{ opacity: 0, scale: 1.05, filter: 'blur(8px)' }} transition={{ duration: 0.5, ease: "easeOut" }} className="text-5xl md:text-7xl lg:text-8xl font-serif text-white tracking-tight relative z-10" style={{ textShadow: `0 0 40px ${selectedEmotion.color}40` }}>{selectedEmotion.levels[intensity].word}</motion.h1></AnimatePresence>
               </div>
-              <div className="relative text-center min-h-[3rem] max-w-lg px-3 flex items-center justify-center">
+              <div className="relative text-center min-h-[3rem] max-w-lg px-4 flex items-center justify-center">
                 <AnimatePresence mode="wait"><motion.p key={`def-${selectedEmotion.levels[intensity].word}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.4, delay: 0.1 }} className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">{selectedEmotion.levels[intensity].definition}</motion.p></AnimatePresence>
               </div>
             </div>

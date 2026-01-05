@@ -582,6 +582,9 @@ export default function App() {
       <style>{`
         /* --- Background Animation --- */
         .container {
+          width: 100%;
+          max-width: none;
+          margin: 0;
           background-color: #0b0b0d; /* Matching dark aesthetic */
           background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 0);
           background-size: 40px 40px;

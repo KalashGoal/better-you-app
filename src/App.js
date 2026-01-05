@@ -5,7 +5,7 @@ import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, 
 /* =========================================
    GLOBAL CONFIG
    ========================================= */
-const apiKey = "AIzaSyBE-bGT90bxEqFl_0mRs8HpEurz5aoDRqA"; 
+const apiKey = ""; 
 
 /* =========================================
    DATA: DON'T SAY 'VERY' DICTIONARY (OFFLINE)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, Quote, RefreshCw, Volume2, Sparkles, X, Terminal, Zap, BookOpen, Layers } from 'lucide-react';
+import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, Quote, RefreshCw, Volume2, Sparkles, X, Terminal, Zap, BookOpen, Layers, Star, Globe } from 'lucide-react';
 
 /* =========================================
    GLOBAL CONFIG
@@ -13,6 +13,7 @@ const apiKey = "";
 const VERY_DATA = {
   "accurate": { word: "Exact", type: "Adj", uk: "/ɪɡˈzakt/", us: "/ɪɡˈzækt/", def: "Not approximated in any way; precise.", ety: "Latin 'exactus' (perfected).", examples: ["The description was exact in every detail.", "We need exact figures for the report."] },
   "afraid": { word: "Terrified", type: "Adj", uk: "/ˈter.ə.faɪd/", us: "/ˈter.ə.faɪd/", def: "Extremely afraid or fearful.", ety: "Latin 'terrificare' (frighten).", examples: ["She was terrified of the dark.", "The terrified child hid under the bed."] },
+  "amazing": { word: "Miraculous", type: "Adj", uk: "/mɪˈræk.jə.ləs/", us: "/məˈræk.jə.ləs/", def: "Occurring through divine or supernatural intervention, or manifesting such power.", ety: "Latin 'miraculum' (object of wonder).", examples: ["A miraculous recovery.", "The team made a miraculous comeback."] },
   "angry": { word: "Furious", type: "Adj", uk: "/ˈfjʊə.ri.əs/", us: "/ˈfjʊr.i.əs/", def: "Extremely angry.", ety: "Latin 'furiosus' (full of rage).", examples: ["He was furious about the damage to his car.", "She sent a furious email to the manager."] },
   "bad": { word: "Atrocious", type: "Adj", uk: "/əˈtrəʊ.ʃəs/", us: "/əˈtroʊ.ʃəs/", def: "Of a very poor quality; extremely bad or unpleasant.", ety: "Latin 'atrox' (cruel).", examples: ["The weather has been atrocious.", "His spelling is atrocious."] },
   "beautiful": { word: "Exquisite", type: "Adj", uk: "/ɪkˈskwɪz.ɪt/", us: "/ɪkˈskwɪz.ɪt/", def: "Extremely beautiful and, typically, delicate.", ety: "Latin 'exquirere' (search out).", examples: ["She wore an exquisite diamond necklace.", "The garden was exquisite in the moonlight."] },
@@ -47,11 +48,13 @@ const VERY_DATA = {
   "important": { word: "Crucial", type: "Adj", uk: "/ˈkruː.ʃəl/", us: "/ˈkruː.ʃəl/", def: "Decisive or critical, especially in the success or failure of something.", ety: "Latin 'crux' (cross).", examples: ["Negotiations were at a crucial stage.", "It is crucial that we arrive on time."] },
   "intelligent": { word: "Brilliant", type: "Adj", uk: "/ˈbrɪl.jənt/", us: "/ˈbrɪl.jənt/", def: "Exceptionally clever or talented.", ety: "French 'briller' (shine).", examples: ["He is a brilliant scientist.", "A brilliant idea."] },
   "interesting": { word: "Captivating", type: "Adj", uk: "/ˈkæp.tɪ.veɪ.tɪŋ/", us: "/ˈkæp.tə.veɪ.tɪŋ/", def: "Capable of attracting and holding interest; charming.", ety: "Latin 'captivare' (take).", examples: ["A captivating story.", "She has a captivating smile."] },
+  "known": { word: "Renowned", type: "Adj", uk: "/rɪˈnaʊnd/", us: "/rɪˈnaʊnd/", def: "Known or talked about by many people; famous.", ety: "Old French 'renomer' (make famous).", examples: ["A renowned author.", "The region is renowned for its wine."] },
   "lazy": { word: "Indolent", type: "Adj", uk: "/ˈɪn.dəl.ənt/", us: "/ˈɪn.dəl.ənt/", def: "Wanting to avoid activity or exertion; lazy.", ety: "Latin 'in-' (not) + 'dolere' (suffer pain).", examples: ["They were indolent and addicted to a life of pleasure.", "An indolent wave of the hand."] },
   "loud": { word: "Deafening", type: "Adj", uk: "/ˈdef.ən.ɪŋ/", us: "/ˈdef.ən.ɪŋ/", def: "(of a noise) so loud as to make it impossible to hear anything else.", ety: "Old English 'deaf'.", examples: ["The music was deafening.", "A deafening silence."] },
   "mean": { word: "Malicious", type: "Adj", uk: "/məˈlɪʃ.əs/", us: "/məˈlɪʃ.əs/", def: "Characterized by malice; intending or intended to do harm.", ety: "Latin 'malitia'.", examples: ["Malicious gossip.", "He took malicious pleasure in her mistake."] },
   "messy": { word: "Chaotic", type: "Adj", uk: "/keɪˈɒt.ɪk/", us: "/keɪˈɑː.t̬ɪk/", def: "In a state of complete confusion and disorder.", ety: "Greek 'khaos'.", examples: ["The traffic was chaotic.", "A chaotic desk."] },
   "nice": { word: "Benevolent", type: "Adj", uk: "/bəˈnev.əl.ənt/", us: "/bəˈnev.əl.ənt/", def: "Well meaning and kindly.", ety: "Latin 'bene' (well) + 'volens' (wishing).", examples: ["A benevolent smile.", "A benevolent fund."] },
+  "noisy": { word: "Thunderous", type: "Adj", uk: "/ˈθʌn.dər.əs/", us: "/ˈθʌn.dɚ.əs/", def: "Very loud; like thunder.", ety: "Old English 'thunor'.", examples: ["Thunderous applause.", "A thunderous noise."] },
   "often": { word: "Frequently", type: "Adv", uk: "/ˈfriː.kwənt.li/", us: "/ˈfriː.kwənt.li/", def: "Regularly or habitually; often.", ety: "Latin 'frequens'.", examples: ["They frequently go abroad.", "He frequently forgets his keys."] },
   "old": { word: "Ancient", type: "Adj", uk: "/ˈeɪn.ʃənt/", us: "/ˈeɪn.ʃənt/", def: "Belonging to the very distant past and no longer in existence.", ety: "Latin 'ante' (before).", examples: ["Ancient civilizations.", "An ancient forest."] },
   "open": { word: "Transparent", type: "Adj", uk: "/trænsˈpær.ənt/", us: "/trænsˈper.ənt/", def: "Easy to perceive or detect.", ety: "Latin 'transparere'.", examples: ["His motives were transparent.", "Transparent operations."] },
@@ -63,6 +66,8 @@ const VERY_DATA = {
   "rich": { word: "Affluent", type: "Adj", uk: "/ˈæf.lu.ənt/", us: "/ˈæf.lu.ənt/", def: "(especially of a group or area) having a great deal of money; wealthy.", ety: "Latin 'affluere' (flow towards).", examples: ["The affluent societies of the west.", "An affluent neighborhood."] },
   "sad": { word: "Sorrowful", type: "Adj", uk: "/ˈsɒr.əʊ.fəl/", us: "/ˈsɔːr.oʊ.fəl/", def: "Feeling or showing grief.", ety: "Old English 'sorg'.", examples: ["With a sorrowful sigh.", "Sorrowful eyes."] },
   "scared": { word: "Petrified", type: "Adj", uk: "/ˈpet.rə.faɪd/", us: "/ˈpet.rə.faɪd/", def: "So frightened that one is unable to move; terrified.", ety: "Greek 'petra' (rock).", examples: ["She was petrified of snakes.", "He stood petrified with fear."] },
+  "serious": { word: "Grave", type: "Adj", uk: "/ɡreɪv/", us: "/ɡreɪv/", def: "Giving cause for alarm; serious.", ety: "Latin 'gravis' (heavy).", examples: ["A grave situation.", "He looked grave."] },
+  "sharp": { word: "Keen", type: "Adj", uk: "/kiːn/", us: "/kiːn/", def: "Having or showing eagerness or enthusiasm; (of a sense) highly developed.", ety: "Old English 'cene'.", examples: ["Keen eyesight.", "A keen interest."] },
   "shiny": { word: "Gleaming", type: "Adj", uk: "/ˈɡliː.mɪŋ/", us: "/ˈɡliː.mɪŋ/", def: "Shining brightly, especially with reflected light.", ety: "Old English 'glæm'.", examples: ["A gleaming new car.", "Gleaming white teeth."] },
   "short": { word: "Brief", type: "Adj", uk: "/briːf/", us: "/briːf/", def: "Of short duration.", ety: "Latin 'brevis'.", examples: ["A brief visit.", "Keep it brief."] },
   "shy": { word: "Timid", type: "Adj", uk: "/ˈtɪm.ɪd/", us: "/ˈtɪm.ɪd/", def: "Showing a lack of courage or confidence; easily frightened.", ety: "Latin 'timere' (to fear).", examples: ["A timid voice.", "He was too timid to ask."] },
@@ -82,7 +87,9 @@ const VERY_DATA = {
   "valuable": { word: "Precious", type: "Adj", uk: "/ˈpreʃ.əs/", us: "/ˈpreʃ.əs/", def: "Of great value; not to be wasted or treated carelessly.", ety: "Latin 'pretiosus'.", examples: ["Precious moments.", "Water is a precious resource."] },
   "weak": { word: "Frail", type: "Adj", uk: "/freɪl/", us: "/freɪl/", def: "(of a person) weak and delicate.", ety: "Latin 'fragilis'.", examples: ["His frail hands.", "She looked frail and vulnerable."] },
   "wet": { word: "Soaked", type: "Adj", uk: "/səʊkt/", us: "/soʊkt/", def: "Extremely wet; saturated.", ety: "Old English 'socian'.", examples: ["I got soaked in the rain.", "His shirt was soaked with sweat."] },
+  "wide": { word: "Expansive", type: "Adj", uk: "/ɪkˈspæn.sɪv/", us: "/ɪkˈspæn.sɪv/", def: "Covering a wide area in terms of space or scope; extensive.", ety: "Latin 'expandere'.", examples: ["An expansive lawn.", "She has an expansive personality."] },
   "willing": { word: "Eager", type: "Adj", uk: "/ˈiː.ɡər/", us: "/ˈiː.ɡɚ/", def: "(of a person) wanting to do or have something very much.", ety: "Latin 'acer' (sharp).", examples: ["Eager to learn.", "Eager beaver."] },
+  "wise": { word: "Sage", type: "Adj", uk: "/seɪdʒ/", us: "/seɪdʒ/", def: "Having, showing, or indicating profound wisdom.", ety: "Latin 'sapere' (be wise).", examples: ["Sage advice.", "A sage old man."] },
   "worried": { word: "Distressed", type: "Adj", uk: "/dɪˈstrest/", us: "/dɪˈstrest/", def: "Suffering from anxiety, sorrow, or pain.", ety: "Latin 'distringere' (stretch apart).", examples: ["She was too distressed to speak.", "A distressed family."] }
 };
 
@@ -104,7 +111,7 @@ const EMOTIONS_DATA = [
   { id: 'proud', label: 'Proud', color: '#EAB308', levels: [{ word: 'Glad', definition: 'Pleased; delighted.' }, { word: 'Satisfied', definition: 'Contented; pleased.' }, { word: 'Proud', definition: 'Feeling deep pleasure as a result of achievements.' }, { word: 'Honored', definition: 'Regarded with great respect.' }, { word: 'Triumphant', definition: 'Having won a battle or contest; victorious.' }, { word: 'Glorious', definition: 'Having, worthy of, or bringing fame.' }] },
   { id: 'compassionate', label: 'Compassionate', color: '#FB7185', levels: [{ word: 'Nice', definition: 'Pleasant; agreeable; satisfactory.' }, { word: 'Kind', definition: 'Friendly, generous, and considerate.' }, { word: 'Caring', definition: 'Displaying kindness and concern for others.' }, { word: 'Sympathetic', definition: 'Feeling, showing, or expressing sympathy.' }, { word: 'Empathetic', definition: 'Understanding and sharing the feelings of another.' }, { word: 'Selfless', definition: 'Concerned more with the needs of others than one\'s own.' }] },
   { id: 'afraid', label: 'Afraid', color: '#4B5563', levels: [{ word: 'Nervous', definition: 'Easily agitated or alarmed.' }, { word: 'Worried', definition: 'Anxious or troubled.' }, { word: 'Scared', definition: 'Fearful; frightened.' }, { word: 'Afraid', definition: 'Feeling fear or anxiety.' }, { word: 'Terrified', definition: 'Cause to feel extreme fear.' }, { word: 'Petrified', definition: 'So frightened that one is unable to move.' }, { word: 'Horrified', definition: 'Filled with horror; extremely shocked.' }] },
-  { id: 'jealous', label: 'Jealous', color: '#10B981', levels: [{ word: 'Envious', definition: 'Feeling or showing envy.' }, { word: 'Bitter', definition: 'Feeling deep anger or pain.' }, { word: 'Jealous', definition: 'Feeling envy of someone or their achievements.' }, { word: 'Covetous', definition: 'Having or showing a great desire to possess something belonging to someone else.' }, { word: 'Resentful', definition: 'Feeling bitterness at having been treated unfairly.' }, { word: 'Possessive', definition: 'Demanding someone\'s total attention and love.' }] },
+  { id: 'jealous', label: 'Jealous', color: '#10B981', levels: [{ word: 'Envious', definition: 'Feeling or showing envy.' }, { word: 'Bitter', definition: 'Feeling deep anger or pain.' }, { word: 'Jealous', definition: 'Feeling envy of someone or their achievements.' }, { word: 'Covetous', definition: 'Having or showing a great desire to possess something belonging to someone else.' }, { word: 'Resentful', definition: 'Feeling bitterness at having been treated unfairly.' }, { word: 'Covetous', definition: 'Eagerly desirous of wealth or possessions.' }] },
   { id: 'surprised', label: 'Surprised', color: '#F97316', levels: [{ word: 'Startled', definition: 'Feeling sudden shock or alarm.' }, { word: 'Surprised', definition: 'Feeling or showing surprise.' }, { word: 'Shocked', definition: 'Cause (someone) to feel surprised and upset.' }, { word: 'Amazed', definition: 'Greatly surprised; astonished.' }, { word: 'Stunned', definition: 'Astonished or shocked so that one is temporarily unable to react.' }, { word: 'Mind-blown', definition: 'Extremely impressed or overwhelmed.' }] },
   { id: 'disgusted', label: 'Disgusted', color: '#84CC16', levels: [{ word: 'Displeased', definition: 'Feeling or showing annoyance and displeasure.' }, { word: 'Grossed Out', definition: 'Feeling distinct disgust.' }, { word: 'Disgusted', definition: 'Feeling or expressing revulsion or strong disapproval.' }, { word: 'Repulsed', definition: 'Cause to feel intense distaste and aversion.' }, { word: 'Sickened', definition: 'Make (someone) feel sick or disgusted.' }] },
   { id: 'confused', label: 'Confused', color: '#8B5CF6', levels: [{ word: 'Uncertain', definition: 'Not able to be relied on; not known or definite.' }, { word: 'Lost', definition: 'Unable to find one\'s way; not knowing what to do.' }, { word: 'Confused', definition: 'Unable to think clearly; bewildered.' }, { word: 'Puzzled', definition: 'Unable to understand; perplexed.' }, { word: 'Baffled', definition: 'Totally bewilder or perplex.' }] },
@@ -159,11 +166,20 @@ const getExampleSentences = (word, emotionId) => {
 /* =========================================
    SUB-COMPONENT: PLACEHOLDER PAGE
    ========================================= */
-const PlaceholderPage = ({ title, icon: Icon, color }) => (
+const PlaceholderPage = ({ title, icon: Icon, color, onBack }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
     className="w-full h-full flex flex-col items-center justify-center min-h-[60vh] text-center"
   >
+    {/* Back Button */}
+    <button 
+        onClick={onBack}
+        className="absolute top-24 left-6 md:left-10 text-gray-500 hover:text-white transition-colors flex items-center gap-2 group z-20"
+    >
+        <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm uppercase tracking-widest font-medium">Back</span>
+    </button>
+
     <div className={`p-6 rounded-full bg-gray-900/50 mb-6 ${color}`}>
         <Icon size={64} strokeWidth={1} />
     </div>
@@ -234,7 +250,7 @@ const DontSayVeryTool = ({ onBack }) => {
             }, 500);
         }
         setIsLoading(false);
-    }, 600); // Simulate processing time
+    }, 600); 
   };
 
   return (
@@ -250,7 +266,7 @@ const DontSayVeryTool = ({ onBack }) => {
         <span className="text-sm uppercase tracking-widest font-medium">Back</span>
       </button>
 
-      <div className="w-full max-w-3xl space-y-12 relative z-10 mt-8">
+      <div className="w-full max-w-3xl space-y-12 relative z-10 mt-12">
         <div className={`flex flex-col items-center justify-center transition-transform duration-500 ease-out ${isTyping ? '-translate-y-4' : 'translate-y-0'}`}>
              <div className="flex flex-col items-center gap-2 mb-1">
                 <span className="text-4xl md:text-5xl font-sans font-light text-gray-500 italic tracking-wider">very</span>
@@ -401,6 +417,16 @@ const VocabSliderTool = ({ onBack }) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative w-full min-h-screen flex flex-col pb-20 pt-10">
       <div className="fixed inset-0 pointer-events-none transition-opacity duration-1000" style={{ background: selectedEmotion ? `radial-gradient(circle at 50% 30%, ${selectedEmotion.color}15 0%, transparent 70%)` : 'transparent' }} />
+      
+      {/* Back Button */}
+      <button 
+        onClick={onBack}
+        className="absolute top-24 left-6 md:left-10 text-gray-500 hover:text-white transition-colors flex items-center gap-2 group z-20"
+      >
+        <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm uppercase tracking-widest font-medium">Back</span>
+      </button>
+
       <style>{`input[type=range]{-webkit-appearance:none;width:100%;background:transparent}input[type=range]:focus{outline:none}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:32px;width:32px;border-radius:50%;background:#000;border:3px solid white;cursor:grab;margin-top:-10px;box-shadow:0 4px 12px rgba(0,0,0,.5);transition:transform .2s cubic-bezier(.4,0,.2,1),box-shadow .2s ease}input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);cursor:grabbing;box-shadow:0 0 0 8px rgba(255,255,255,.1)}input[type=range]::-moz-range-thumb{height:32px;width:32px;border-radius:50%;background:#000;border:3px solid white;cursor:grab;transition:transform .2s ease}input[type=range]::-moz-range-thumb:active{transform:scale(1.15);cursor:grabbing}input[type=range]::-webkit-slider-runnable-track{width:100%;height:12px;cursor:pointer;border-radius:999px}`}</style>
       <motion.div layout transition={{ type: 'spring', stiffness: 100, damping: 20 }} className={`w-full flex justify-center ${selectedEmotion ? 'items-start pt-0' : 'items-center flex-1 -mt-32'}`}>
         <div className={`relative w-full transition-all duration-700 ${selectedEmotion ? 'max-w-md' : 'max-w-xl'}`}>
@@ -473,37 +499,45 @@ const HomePage = ({ onNavigate }) => {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-10 pb-20"
         >
-            <div className="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center">
                 {/* HERO SECTION - REDUCED SIZE & SPACING */}
-                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-4 relative">
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-6 relative">
                     <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10">
                         A BETTER YOU.
                     </h1>
                 </motion.div>
 
-                {/* PRISM OBJECT - CLOSER TO TEXT */}
+                {/* GYRO SPHERE OBJECT - CLOSER TO TEXT */}
                 <motion.div 
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, duration: 1, type: "spring" }}
-                    className="mb-4 relative flex items-center justify-center w-full"
+                    className="mb-6 relative flex items-center justify-center w-full h-[200px]"
                 >
-                    <div style={{ transform: 'scale(0.5)' }}>
-                        <div className="scene">
-                            <div className="prism">
-                                <div className="facet" style={{transform: 'rotateY(0deg) translateZ(40px)'}}></div>
-                                <div className="facet" style={{transform: 'rotateY(60deg) translateZ(40px)'}}></div>
-                                <div className="facet" style={{transform: 'rotateY(120deg) translateZ(40px)'}}></div>
-                                <div className="facet" style={{transform: 'rotateY(180deg) translateZ(40px)'}}></div>
-                                <div className="facet" style={{transform: 'rotateY(240deg) translateZ(40px)'}}></div>
-                                <div className="facet" style={{transform: 'rotateY(300deg) translateZ(40px)'}}></div>
-                                <div className="void"></div>
-                            </div>
-                        </div>
+                    <div className="relative w-[150px] h-[150px] perspective-[1000px]">
+                        <motion.div 
+                            animate={{ rotateX: 360, rotateY: 360 }} 
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-0 border-[2px] border-cyan-500/30 rounded-full"
+                            style={{ transformStyle: 'preserve-3d' }}
+                        />
+                        <motion.div 
+                            animate={{ rotateX: -360, rotateY: 180 }} 
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-2 border-[2px] border-purple-500/30 rounded-full"
+                            style={{ transformStyle: 'preserve-3d' }}
+                        />
+                        <motion.div 
+                            animate={{ rotateX: 180, rotateY: -360 }} 
+                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-4 border-[2px] border-amber-500/30 rounded-full"
+                            style={{ transformStyle: 'preserve-3d' }}
+                        />
+                        <div className="absolute inset-0 bg-white/5 blur-xl rounded-full animate-pulse" />
                     </div>
                 </motion.div>
 
                 {/* SUBTEXT - CLOSER TO OBJECT */}
                 <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} className="text-gray-400 font-serif text-lg md:text-xl tracking-tight max-w-lg mx-auto leading-relaxed text-center mb-12 italic opacity-80">
-                    Refine your inner signal. A minimalist ecosystem for clarity, growth, and intentionality.
+                    Elevate your expression. Precision in language leads to clarity in thought.
                 </motion.p>
 
                 {/* VARIOUS TOOLS HEADER */}
@@ -512,7 +546,7 @@ const HomePage = ({ onNavigate }) => {
                 </motion.div>
 
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }} className="w-full flex flex-col gap-6">
-                    <button onClick={() => onNavigate('vocab')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-amber-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-amber-900/10 overflow-hidden">
+                    <button onClick={() => onNavigate('vocab')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-amber-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-amber-900/10 overflow-hidden active:scale-95">
                          <div className="p-4 bg-gray-900 rounded-full text-amber-500/80 group-hover:text-amber-400 transition-colors">
                              <MessageSquare size={28} strokeWidth={1.5} />
                          </div>
@@ -523,7 +557,7 @@ const HomePage = ({ onNavigate }) => {
                          <ArrowRight size={20} className="text-gray-700 group-hover:text-amber-400 -translate-x-2 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                     </button>
 
-                    <button onClick={() => onNavigate('very')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-cyan-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-cyan-900/10 overflow-hidden">
+                    <button onClick={() => onNavigate('very')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-cyan-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-cyan-900/10 overflow-hidden active:scale-95">
                          <div className="p-4 bg-gray-900 rounded-full text-cyan-500/80 group-hover:text-cyan-400 transition-colors">
                              <Activity size={28} strokeWidth={1.5} />
                          </div>
@@ -538,7 +572,7 @@ const HomePage = ({ onNavigate }) => {
                          </div>
                     </button>
 
-                     <button onClick={() => onNavigate('principles')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-emerald-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-emerald-900/10 overflow-hidden">
+                     <button onClick={() => onNavigate('principles')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-emerald-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-emerald-900/10 overflow-hidden active:scale-95">
                          <div className="p-4 bg-gray-900 rounded-full text-emerald-500/80 group-hover:text-emerald-400 transition-colors">
                              <Brain size={28} strokeWidth={1.5} />
                          </div>
@@ -549,7 +583,7 @@ const HomePage = ({ onNavigate }) => {
                          <span className="text-[10px] bg-gray-900 text-gray-500 px-2 py-1 rounded uppercase tracking-wider group-hover:bg-emerald-900/20 group-hover:text-emerald-400 transition-colors">Coming Soon</span>
                     </button>
 
-                    <button onClick={() => onNavigate('quotes')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-rose-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-rose-900/10 overflow-hidden">
+                    <button onClick={() => onNavigate('quotes')} className="group relative w-full h-28 bg-[#0a0a0a] border border-gray-800 rounded-xl flex items-center px-8 gap-6 hover:border-rose-500/50 hover:bg-gray-900/40 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl hover:shadow-rose-900/10 overflow-hidden active:scale-95">
                          <div className="p-4 bg-gray-900 rounded-full text-rose-500/80 group-hover:text-rose-400 transition-colors">
                              <Quote size={28} strokeWidth={1.5} />
                          </div>
@@ -570,7 +604,6 @@ const HomePage = ({ onNavigate }) => {
    ========================================= */
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // VIEW MAPPING FOR GLASS NAV
   const views = ['home', 'vocab', 'very', 'principles', 'quotes'];
@@ -634,8 +667,8 @@ export default function App() {
         }
       `}</style>
 
-      {/* DESKTOP NAV (Hidden on Mobile) */}
-      <div className="fixed bottom-8 left-0 right-0 z-50 justify-center pointer-events-none hidden md:flex">
+      {/* FLOATING HEADER (Bottom on desktop for ergonomics, Top on mobile) */}
+      <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center pointer-events-none">
           <div className="glass-nav-container pointer-events-auto">
               <div 
                   className="glass-glider" 
@@ -648,51 +681,19 @@ export default function App() {
                     onClick={() => setCurrentView(view)}
                     style={{ width: '120px' }} // Fixed width for alignment with calculation
                   >
-                      {view === 'very' ? 'Don\'t' : view.charAt(0).toUpperCase() + view.slice(1)}
+                      {view === 'very' ? 'Very' : view.charAt(0).toUpperCase() + view.slice(1)}
                   </div>
               ))}
           </div>
       </div>
 
-      {/* MOBILE NAV (Hidden on Desktop) */}
-      <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-end gap-4">
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-gray-800 rounded-2xl p-2 min-w-[160px] shadow-2xl mb-2"
-              >
-                {views.map((view) => (
-                  <button
-                    key={view}
-                    onClick={() => { setCurrentView(view); setIsMobileMenuOpen(false); }}
-                    className={`w-full text-right px-4 py-3 text-sm font-semibold uppercase tracking-widest rounded-xl transition-colors ${currentView === view ? 'text-white bg-white/10' : 'text-gray-500 hover:text-white'}`}
-                  >
-                    {view === 'very' ? 'Don\'t' : view.charAt(0).toUpperCase() + view.slice(1)}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
-          >
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
-      </div>
-
-      {/* MAIN CONTENT WRAPPER */}
-      <div className="w-full min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pt-20 pb-40 px-4 md:px-8">
+      <div className="min-h-screen w-full">
           <AnimatePresence mode="wait">
               {currentView === 'home' && <HomePage key="home" onNavigate={setCurrentView} />}
               {currentView === 'vocab' && <VocabSliderTool key="vocab" onBack={() => setCurrentView('home')} />}
               {currentView === 'very' && <DontSayVeryTool key="very" onBack={() => setCurrentView('home')} />}
-              {currentView === 'principles' && <PlaceholderPage key="principles" title="First Principles" icon={Brain} color="text-emerald-400" />}
-              {currentView === 'quotes' && <PlaceholderPage key="quotes" title="Good Quotes" icon={Quote} color="text-rose-400" />}
+              {currentView === 'principles' && <PlaceholderPage key="principles" title="First Principles" icon={Brain} color="text-emerald-400" onBack={() => setCurrentView('home')} />}
+              {currentView === 'quotes' && <PlaceholderPage key="quotes" title="Good Quotes" icon={Quote} color="text-rose-400" onBack={() => setCurrentView('home')} />}
           </AnimatePresence>
       </div>
 

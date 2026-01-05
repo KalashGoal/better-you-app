@@ -5,7 +5,7 @@ import { Search, ChevronLeft, ArrowRight, Menu, Brain, Activity, MessageSquare, 
 /* =========================================
    GLOBAL CONFIG
    ========================================= */
-const apiKey = ""; 
+const apiKey = "AIzaSyBE-bGT90bxEqFl_0mRs8HpEurz5aoDRqA"; 
 
 /* =========================================
    DATA: DON'T SAY 'VERY' DICTIONARY (OFFLINE)
@@ -94,73 +94,159 @@ const VERY_DATA = {
 };
 
 /* =========================================
-   DATA: VOCAB SLIDER EMOTIONS
+   CUSTOM CURSOR COMPONENT
    ========================================= */
-const EMOTIONS_DATA = [
-  { id: 'happy', label: 'Happy', color: '#FBBF24', levels: [{ word: 'Content', definition: 'Peacefully happy and satisfied.' }, { word: 'Pleased', definition: 'Feeling satisfaction and enjoyment.' }, { word: 'Cheerful', definition: 'Noticeably happy and optimistic.' }, { word: 'Joyful', definition: 'Feeling, expressing, or causing great pleasure.' }, { word: 'Delighted', definition: 'Feeling or showing great pleasure.' }, { word: 'Elated', definition: 'Ecstatically happy and full of excitement.' }, { word: 'Euphoric', definition: 'Intense, overwhelming excitement.' }, { word: 'Ecstatic', definition: 'Overwhelming happiness or joyful excitement.' }] },
-  { id: 'sad', label: 'Sad', color: '#60A5FA', levels: [{ word: 'Down', definition: 'Unhappy; low in spirits.' }, { word: 'Blue', definition: 'Melancholic or depressed.' }, { word: 'Upset', definition: 'Unhappy, disappointed, or worried.' }, { word: 'Unhappy', definition: 'Not happy; sad.' }, { word: 'Gloomy', definition: 'Feeling distressed or pessimistic.' }, { word: 'Miserable', definition: 'Wretchedly unhappy or uncomfortable.' }, { word: 'Despondent', definition: 'In low spirits from loss of hope.' }, { word: 'Desolate', definition: 'Feeling extreme unhappiness or loneliness.' }] },
-  { id: 'angry', label: 'Angry', color: '#EF4444', levels: [{ word: 'Annoyed', definition: 'Slightly angry; irritated.' }, { word: 'Cross', definition: 'Annoyed or irritated.' }, { word: 'Frustrated', definition: 'Feeling distress from an inability to change something.' }, { word: 'Mad', definition: 'Very angry.' }, { word: 'Angry', definition: 'Feeling or showing strong annoyance or hostility.' }, { word: 'Furious', definition: 'Extremely angry.' }, { word: 'Livid', definition: 'Furiously angry.' }, { word: 'Enraged', definition: 'Filled with consuming, uncontrollable anger.' }] },
-  { id: 'anxious', label: 'Anxious', color: '#A78BFA', levels: [{ word: 'Worried', definition: 'Anxious or troubled about actual or potential problems.' }, { word: 'Nervous', definition: 'Easily agitated or alarmed.' }, { word: 'Uneasy', definition: 'Causing or feeling anxiety; troubled.' }, { word: 'Tense', definition: 'Unable to relax because of nervousness.' }, { word: 'Anxious', definition: 'Experiencing worry, unease, or nervousness.' }, { word: 'Distressed', definition: 'Suffering from extreme anxiety, sorrow, or pain.' }, { word: 'Panicked', definition: 'Feeling uncontrollable fear or anxiety.' }] },
-  { id: 'calm', label: 'Calm', color: '#34D399', levels: [{ word: 'Mellow', definition: 'Pleasantly smooth or soft; free from harshness.' }, { word: 'Relaxed', definition: 'Free from tension and anxiety.' }, { word: 'Calm', definition: 'Not showing or feeling nervousness, anger, or other emotions.' }, { word: 'Peaceful', definition: 'Free from disturbance; tranquil.' }, { word: 'Serene', definition: 'Calm, peaceful, and untroubled.' }, { word: 'Tranquil', definition: 'Free from disturbance; calm.' }, { word: 'Blissful', definition: 'Extremely happy; full of joy and complete peace.' }, { word: 'Zen', definition: 'Relaxed and not worrying about things.' }] },
-  { id: 'inspired', label: 'Inspired', color: '#F472B6', levels: [{ word: 'Curious', definition: 'Eager to know or learn something.' }, { word: 'Interested', definition: 'Showing curiosity or concern.' }, { word: 'Motivated', definition: 'Stimulated to do something; enthusiastic.' }, { word: 'Eager', definition: 'Wanting to do or have something very much.' }, { word: 'Inspired', definition: 'Filled with the urge or ability to do something creative.' }, { word: 'Driven', definition: 'Operated, moved, or controlled by a specified force.' }, { word: 'Visionary', definition: 'Thinking about or planning the future with imagination.' }] },
-  { id: 'exhausted', label: 'Exhausted', color: '#9CA3AF', levels: [{ word: 'Sleepy', definition: 'Ready to fall asleep.' }, { word: 'Tired', definition: 'In need of sleep or rest.' }, { word: 'Weary', definition: 'Feeling tiredness from excessive exertion.' }, { word: 'Drained', definition: 'Deprived of strength or vitality.' }, { word: 'Exhausted', definition: 'Drained of one\'s physical or mental resources.' }, { word: 'Spent', definition: 'Having no power or energy left.' }, { word: 'Burnt Out', definition: 'Physical or mental collapse caused by overwork.' }] },
-  { id: 'confident', label: 'Confident', color: '#F59E0B', levels: [{ word: 'Sure', definition: 'Confident in what one thinks or knows.' }, { word: 'Secure', definition: 'Fixed or fastened so as not to give way.' }, { word: 'Confident', definition: 'Feeling or showing confidence in oneself.' }, { word: 'Bold', definition: 'Showing an ability to take risks; courageous.' }, { word: 'Daring', definition: 'Adventurous or audaciously bold.' }, { word: 'Fearless', definition: 'Lacking fear.' }, { word: 'Unstoppable', definition: 'Impossible to stop or prevent.' }] },
-  { id: 'lonely', label: 'Lonely', color: '#6366F1', levels: [{ word: 'Alone', definition: 'Having no one else present.' }, { word: 'Solitary', definition: 'Done or existing alone.' }, { word: 'Lonely', definition: 'Sad because one has no friends or company.' }, { word: 'Isolated', definition: 'Far away from other places or people.' }, { word: 'Left Out', definition: 'Not included in an activity or group.' }, { word: 'Abandoned', definition: 'Having been deserted or cast off.' }, { word: 'Forsaken', definition: 'Abandoned or deserted.' }] },
-  { id: 'hopeful', label: 'Hopeful', color: '#2DD4BF', levels: [{ word: 'Wishing', definition: 'Feeling or expressing a strong desire.' }, { word: 'Dreaming', definition: 'Contemplating the possibility of doing something.' }, { word: 'Hopeful', definition: 'Feeling or inspiring optimism about a future event.' }, { word: 'Optimistic', definition: 'Hopeful and confident about the future.' }, { word: 'Excited', definition: 'Very enthusiastic and eager.' }, { word: 'Idealistic', definition: 'Aiming for perfection.' }] },
-  { id: 'guilty', label: 'Guilty', color: '#78716C', levels: [{ word: 'Sorry', definition: 'Feeling distress or sympathy for someone else\'s misfortune.' }, { word: 'Bad', definition: 'Feeling guilty or regretful.' }, { word: 'Regretful', definition: 'Feeling or showing sorrow or remorse.' }, { word: 'Ashamed', definition: 'Embarrassed or guilty because of one\'s actions.' }, { word: 'Guilty', definition: 'Responsible for a specified wrongdoing.' }, { word: 'Remorseful', definition: 'Filled with deep regret or guilt.' }] },
-  { id: 'proud', label: 'Proud', color: '#EAB308', levels: [{ word: 'Glad', definition: 'Pleased; delighted.' }, { word: 'Satisfied', definition: 'Contented; pleased.' }, { word: 'Proud', definition: 'Feeling deep pleasure as a result of achievements.' }, { word: 'Honored', definition: 'Regarded with great respect.' }, { word: 'Triumphant', definition: 'Having won a battle or contest; victorious.' }, { word: 'Glorious', definition: 'Having, worthy of, or bringing fame.' }] },
-  { id: 'compassionate', label: 'Compassionate', color: '#FB7185', levels: [{ word: 'Nice', definition: 'Pleasant; agreeable; satisfactory.' }, { word: 'Kind', definition: 'Friendly, generous, and considerate.' }, { word: 'Caring', definition: 'Displaying kindness and concern for others.' }, { word: 'Sympathetic', definition: 'Feeling, showing, or expressing sympathy.' }, { word: 'Empathetic', definition: 'Understanding and sharing the feelings of another.' }, { word: 'Selfless', definition: 'Concerned more with the needs of others than one\'s own.' }] },
-  { id: 'afraid', label: 'Afraid', color: '#4B5563', levels: [{ word: 'Nervous', definition: 'Easily agitated or alarmed.' }, { word: 'Worried', definition: 'Anxious or troubled.' }, { word: 'Scared', definition: 'Fearful; frightened.' }, { word: 'Afraid', definition: 'Feeling fear or anxiety.' }, { word: 'Terrified', definition: 'Cause to feel extreme fear.' }, { word: 'Petrified', definition: 'So frightened that one is unable to move.' }, { word: 'Horrified', definition: 'Filled with horror; extremely shocked.' }] },
-  { id: 'jealous', label: 'Jealous', color: '#10B981', levels: [{ word: 'Envious', definition: 'Feeling or showing envy.' }, { word: 'Bitter', definition: 'Feeling deep anger or pain.' }, { word: 'Jealous', definition: 'Feeling envy of someone or their achievements.' }, { word: 'Covetous', definition: 'Having or showing a great desire to possess something belonging to someone else.' }, { word: 'Resentful', definition: 'Feeling bitterness at having been treated unfairly.' }, { word: 'Covetous', definition: 'Eagerly desirous of wealth or possessions.' }] },
-  { id: 'surprised', label: 'Surprised', color: '#F97316', levels: [{ word: 'Startled', definition: 'Feeling sudden shock or alarm.' }, { word: 'Surprised', definition: 'Feeling or showing surprise.' }, { word: 'Shocked', definition: 'Cause (someone) to feel surprised and upset.' }, { word: 'Amazed', definition: 'Greatly surprised; astonished.' }, { word: 'Stunned', definition: 'Astonished or shocked so that one is temporarily unable to react.' }, { word: 'Mind-blown', definition: 'Extremely impressed or overwhelmed.' }] },
-  { id: 'disgusted', label: 'Disgusted', color: '#84CC16', levels: [{ word: 'Displeased', definition: 'Feeling or showing annoyance and displeasure.' }, { word: 'Grossed Out', definition: 'Feeling distinct disgust.' }, { word: 'Disgusted', definition: 'Feeling or expressing revulsion or strong disapproval.' }, { word: 'Repulsed', definition: 'Cause to feel intense distaste and aversion.' }, { word: 'Sickened', definition: 'Make (someone) feel sick or disgusted.' }] },
-  { id: 'confused', label: 'Confused', color: '#8B5CF6', levels: [{ word: 'Uncertain', definition: 'Not able to be relied on; not known or definite.' }, { word: 'Lost', definition: 'Unable to find one\'s way; not knowing what to do.' }, { word: 'Confused', definition: 'Unable to think clearly; bewildered.' }, { word: 'Puzzled', definition: 'Unable to understand; perplexed.' }, { word: 'Baffled', definition: 'Totally bewilder or perplex.' }] },
-  { id: 'bored', label: 'Bored', color: '#6B7280', levels: [{ word: 'Dull', definition: 'Lacking interest or excitement.' }, { word: 'Uninterested', definition: 'Not interested in or concerned about something.' }, { word: 'Bored', definition: 'Feeling weary and restless through lack of interest.' }, { word: 'Tired of', definition: 'Bored with or annoyed by something.' }, { word: 'Apathetic', definition: 'Showing or feeling no interest, enthusiasm, or concern.' }] },
-  { id: 'adoring', label: 'Adoring', color: '#EC4899', levels: [{ word: 'Fond', definition: 'Having an affection or liking for.' }, { word: 'Caring', definition: 'Displaying kindness and concern for others.' }, { word: 'Loving', definition: 'Feeling or showing love or great care.' }, { word: 'Adoring', definition: 'Loving and admiring someone very much.' }, { word: 'Passionate', definition: 'Showing or caused by strong feelings.' }, { word: 'Devoted', definition: 'Very loving or loyal.' }] },
-  { id: 'grateful', label: 'Grateful', color: '#D97706', levels: [{ word: 'Thankful', definition: 'Pleased and relieved.' }, { word: 'Appreciative', definition: 'Feeling or showing gratitude or pleasure.' }, { word: 'Grateful', definition: 'Feeling or showing an appreciation of kindness.' }, { word: 'Touched', definition: 'Feeling gratitude or sympathy.' }, { word: 'Indebted', definition: 'Owing gratitude for a service or favor.' }, { word: 'Beholden', definition: 'Owing thanks or having a duty to someone.' }, { word: 'Overwhelmed', definition: 'Moved deeply by kindness or generosity.' }] },
-  { id: 'embarrassed', label: 'Embarrassed', color: '#BE185D', levels: [{ word: 'Awkward', definition: 'Causing or feeling embarrassment or inconvenience.' }, { word: 'Self-conscious', definition: 'Feeling undue awareness of oneself.' }, { word: 'Sheepish', definition: 'Showing embarrassment from shame or a lack of self-confidence.' }, { word: 'Embarrassed', definition: 'Feeling or showing shame or awkwardness.' }, { word: 'Ashamed', definition: 'Embarrassed or guilty because of one\'s actions.' }, { word: 'Mortified', definition: 'Causing someone to feel deeply ashamed or humiliated.' }, { word: 'Humiliated', definition: 'Make (someone) feel ashamed and foolish.' }] },
-  { id: 'disappointed', label: 'Disappointed', color: '#475569', levels: [{ word: 'Let down', definition: 'Failed to support or help someone as they had hoped.' }, { word: 'Unsatisfied', definition: 'Not satisfied or happy with something.' }, { word: 'Disappointed', definition: 'Sad or displeased because someone or something has failed to fulfill one\'s hopes.' }, { word: 'Disheartened', definition: 'Having lost determination or confidence.' }, { word: 'Disillusioned', definition: 'Disappointed in someone or something that one discovers to be less good than one had believed.' }, { word: 'Crushed', definition: 'Deformed, pulverized, or forced inwards by compression.' }] },
-  { id: 'skeptical', label: 'Skeptical', color: '#7C3AED', levels: [{ word: 'Hesitant', definition: 'Tentative, unsure, or slow in acting or speaking.' }, { word: 'Dubious', definition: 'Hesitating or doubting.' }, { word: 'Skeptical', definition: 'Not easily convinced; having doubts or reservations.' }, { word: 'Suspicious', definition: 'Having or showing a cautious distrust of someone or something.' }, { word: 'Distrustful', definition: 'Feeling or showing no trust in someone or something.' }, { word: 'Cynical', definition: 'Believing that people are motivated by self-interest.' }] },
-  { id: 'relieved', label: 'Relieved', color: '#0EA5E9', levels: [{ word: 'Eased', definition: 'Lessened in severity or intensity.' }, { word: 'Calmer', definition: 'Not showing or feeling nervousness, anger, or other emotions.' }, { word: 'Reassured', definition: 'Say or do something to remove the doubts and fears of someone.' }, { word: 'Relieved', definition: 'No longer feeling distressed or anxious.' }, { word: 'Unburdened', definition: 'Relieve someone of a burden or responsibility.' }, { word: 'Liberated', definition: 'Free from social conventions or traditional ideas.' }] }
-];
+const CustomCursor = () => {
+  const cursorRef = useRef(null);
+  const followerRef = useRef(null);
 
-const SYNONYM_MAP_VOCAB = {
-  'good': { id: 'happy', intensity: 0 }, 'fine': { id: 'happy', intensity: 0 },
-  'great': { id: 'happy', intensity: 2 }, 'very good': { id: 'happy', intensity: 4 },
-  'bad': { id: 'sad', intensity: 2 }, 'terrible': { id: 'sad', intensity: 5 },
-  // ... (Full map logic is handled via searching EMOTIONS_DATA directly in main code)
+  useEffect(() => {
+    const moveCursor = (e) => {
+      const { clientX, clientY } = e;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+      }
+      if (followerRef.current) {
+        // Add a slight delay/lag for the follower
+        setTimeout(() => {
+            if (followerRef.current) {
+                followerRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+            }
+        }, 80);
+      }
+    };
+    
+    // Add "expanding" effect on rapid movement
+    let lastX = 0;
+    let lastY = 0;
+    let speed = 0;
+    const checkSpeed = (e) => {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        speed = Math.sqrt(dx*dx + dy*dy);
+        lastX = e.clientX;
+        lastY = e.clientY;
+        
+        if (followerRef.current) {
+            const scale = Math.min(1 + speed * 0.005, 2.5); // Cap scale at 2.5x
+            followerRef.current.style.width = `${40 * scale}px`;
+            followerRef.current.style.height = `${40 * scale}px`;
+        }
+    };
+
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousemove', checkSpeed);
+    return () => {
+        window.removeEventListener('mousemove', moveCursor);
+        window.removeEventListener('mousemove', checkSpeed);
+    };
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; background-color: white; border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transform: translate3d(-50%, -50%, 0); will-change: transform; margin-left: -6px; margin-top: -6px; }
+        .cursor-follower { position: fixed; top: 0; left: 0; width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width 0.2s, height 0.2s, transform 0.1s linear; transform: translate3d(-50%, -50%, 0); margin-left: -20px; margin-top: -20px; }
+        @media (hover: none) { .custom-cursor, .cursor-follower { display: none; } }
+      `}</style>
+      <div ref={cursorRef} className="custom-cursor" />
+      <div ref={followerRef} className="cursor-follower" />
+    </>
+  );
 };
 
 /* =========================================
-   UTILITY: ADVANCED EXAMPLE GENERATOR
+   INTERACTIVE BACKGROUND COMPONENT
    ========================================= */
-const TEMPLATE_SETS = {
-    positive: ["A <span class='italic underline'>{w}</span> smile spread across her face.", "The news put me in a <span class='italic underline'>{w}</span> mood.", "He was <span class='italic underline'>{w}</span> to finally achieve his goal.", "It was a truly <span class='italic underline'>{w}</span> moment.", "She felt <span class='italic underline'>{w}</span> deep down.", "There was a <span class='italic underline'>{w}</span> atmosphere in the room.", "His voice was <span class='italic underline'>{w}</span> and warm.", "I feel <span class='italic underline'>{w}</span> for their success.", "A <span class='italic underline'>{w}</span> sense of peace.", "She looked absolutely <span class='italic underline'>{w}</span>."],
-    negative: ["A <span class='italic underline'>{w}</span> silence descended.", "He let out a <span class='italic underline'>{w}</span> sigh.", "She cast a <span class='italic underline'>{w}</span> glance.", "I felt completely <span class='italic underline'>{w}</span>.", "The atmosphere was heavy and <span class='italic underline'>{w}</span>.", "His eyes looked <span class='italic underline'>{w}</span>.", "It was a <span class='italic underline'>{w}</span> realization.", "She whispered a <span class='italic underline'>{w}</span> confession.", "My heart felt <span class='italic underline'>{w}</span>.", "He was visibly <span class='italic underline'>{w}</span>."],
-    fear: ["She looked <span class='italic underline'>{w}</span>, as if seeing a ghost.", "A <span class='italic underline'>{w}</span> shiver ran down my spine.", "I felt a <span class='italic underline'>{w}</span> urge to leave.", "Her voice was <span class='italic underline'>{w}</span>.", "The <span class='italic underline'>{w}</span> reality hit me.", "He was <span class='italic underline'>{w}</span> about the decision.", "Feeling <span class='italic underline'>{w}</span> inside.", "A <span class='italic underline'>{w}</span> feeling settled in.", "I was <span class='italic underline'>{w}</span> by the noise.", "She felt <span class='italic underline'>{w}</span>."],
-    hostile: ["He shot a <span class='italic underline'>{w}</span> look.", "Her tone was <span class='italic underline'>{w}</span>.", "I felt <span class='italic underline'>{w}</span> just thinking about it.", "A <span class='italic underline'>{w}</span> rage bubbled up.", "She made a <span class='italic underline'>{w}</span> remark.", "His face was <span class='italic underline'>{w}</span>.", "The injustice left me <span class='italic underline'>{w}</span>.", "A <span class='italic underline'>{w}</span> outburst.", "She felt <span class='italic underline'>{w}</span> of them.", "The smell was <span class='italic underline'>{w}</span>."],
-    surprise: ["She looked <span class='italic underline'>{w}</span>.", "I was completely <span class='italic underline'>{w}</span>.", "A <span class='italic underline'>{w}</span> gasp.", "He stood there, <span class='italic underline'>{w}</span>.", "A <span class='italic underline'>{w}</span> turn of events.", "My jaw dropped in a <span class='italic underline'>{w}</span> way.", "They were <span class='italic underline'>{w}</span> to find it.", "He blinked, <span class='italic underline'>{w}</span>."]
-};
+const InteractiveBackground = () => {
+    const canvasRef = useRef(null);
 
-const EMOTION_CATEGORIES = {
-    happy: 'positive', inspired: 'positive', confident: 'positive', hopeful: 'positive', proud: 'positive', compassionate: 'positive', adoring: 'positive', grateful: 'positive', relieved: 'positive', calm: 'positive',
-    sad: 'negative', lonely: 'negative', guilty: 'negative', disappointed: 'negative', bored: 'negative', exhausted: 'negative',
-    afraid: 'fear', anxious: 'fear', skeptical: 'fear', confused: 'fear', embarrassed: 'fear',
-    angry: 'hostile', jealous: 'hostile', disgusted: 'hostile', surprised: 'surprise'
-};
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
 
-const getExampleSentences = (word, emotionId) => {
-  const w = word.toLowerCase();
-  const category = EMOTION_CATEGORIES[emotionId] || 'positive'; 
-  const templates = TEMPLATE_SETS[category];
-  const seed = w.length + w.charCodeAt(0); 
-  const selected = [];
-  // Ensure we pick 5 distinct templates deterministically based on the word
-  for(let i=0; i<5; i++) {
-     const idx = (seed + i * 2) % templates.length;
-     selected.push(templates[idx].replace('{w}', w));
-  }
-  return selected;
+        const resize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        };
+
+        const initParticles = () => {
+            particles = [];
+            const cols = Math.floor(width / 40); // Spacing
+            const rows = Math.floor(height / 40);
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    particles.push({
+                        x: i * 40 + 20,
+                        y: j * 40 + 20,
+                        originX: i * 40 + 20,
+                        originY: j * 40 + 20,
+                        vx: 0,
+                        vy: 0
+                    });
+                }
+            }
+        };
+
+        const animate = () => {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; // Dot color
+
+            particles.forEach(p => {
+                // Distance to mouse
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxDist = 150; // Interaction radius
+
+                if (dist < maxDist) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (maxDist - dist) / maxDist;
+                    const pushX = Math.cos(angle) * force * 10; // Push strength
+                    const pushY = Math.sin(angle) * force * 10;
+                    p.vx -= pushX;
+                    p.vy -= pushY;
+                }
+
+                // Return to origin
+                p.vx += (p.originX - p.x) * 0.1;
+                p.vy += (p.originY - p.y) * 0.1;
+                
+                // Damping
+                p.vx *= 0.8;
+                p.vy *= 0.8;
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        };
+
+        const handleMouseMove = (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        };
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', handleMouseMove);
+        resize();
+        animate();
+
+        return () => {
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, []);
+
+    return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-40 bg-[#0b0b0d]" />;
 };
 
 /* =========================================
@@ -502,12 +588,12 @@ const HomePage = ({ onNavigate }) => {
             <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center">
                 {/* HERO SECTION - REDUCED SIZE & SPACING */}
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }} className="text-center mb-6 relative">
-                    <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10">
-                        A BETTER YOU.
+                    <h1 className="text-5xl md:text-7xl tracking-tighter text-white mb-2 leading-[1] mix-blend-screen relative z-10 font-playfair" style={{ fontFamily: '"Playfair Display", serif' }}>
+                        A BETTER YOU
                     </h1>
                 </motion.div>
 
-                {/* GYRO SPHERE OBJECT - CLOSER TO TEXT */}
+                {/* GYRO SPHERE OBJECT - BOLDER & GLOWING */}
                 <motion.div 
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, duration: 1, type: "spring" }}
                     className="mb-6 relative flex items-center justify-center w-full h-[200px]"
@@ -516,26 +602,26 @@ const HomePage = ({ onNavigate }) => {
                         <motion.div 
                             animate={{ rotateX: 360, rotateY: 360 }} 
                             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-0 border-[2px] border-cyan-500/30 rounded-full"
+                            className="absolute inset-0 border-[4px] border-cyan-500/50 rounded-full shadow-[0_0_15px_rgba(6,182,212,0.3)]"
                             style={{ transformStyle: 'preserve-3d' }}
                         />
                         <motion.div 
                             animate={{ rotateX: -360, rotateY: 180 }} 
                             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-2 border-[2px] border-purple-500/30 rounded-full"
+                            className="absolute inset-4 border-[4px] border-purple-500/50 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.3)]"
                             style={{ transformStyle: 'preserve-3d' }}
                         />
                         <motion.div 
                             animate={{ rotateX: 180, rotateY: -360 }} 
                             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-4 border-[2px] border-amber-500/30 rounded-full"
+                            className="absolute inset-8 border-[4px] border-amber-500/50 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                             style={{ transformStyle: 'preserve-3d' }}
                         />
                         <div className="absolute inset-0 bg-white/5 blur-xl rounded-full animate-pulse" />
                     </div>
                 </motion.div>
 
-                {/* SUBTEXT - CLOSER TO OBJECT */}
+                {/* SUBTEXT - NEW QUOTE */}
                 <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} className="text-gray-400 font-serif text-lg md:text-xl tracking-tight max-w-lg mx-auto leading-relaxed text-center mb-12 italic opacity-80">
                     Elevate your expression. Precision in language leads to clarity in thought.
                 </motion.p>
@@ -578,7 +664,7 @@ const HomePage = ({ onNavigate }) => {
                          </div>
                          <div className="flex-1 text-left space-y-1">
                              <h3 className="text-xl font-serif text-gray-200 group-hover:text-white transition-colors">First Principles</h3>
-                             <p className="text-xs text-gray-500 uppercase tracking-widest group-hover:text-gray-400">Deconstruct complex problems</p>
+                             <p className="text-xs text-gray-500 uppercase tracking-widest group-hover:text-gray-400 hidden md:block">Deconstruct complex problems</p>
                          </div>
                          <span className="text-[10px] bg-gray-900 text-gray-500 px-2 py-1 rounded uppercase tracking-wider group-hover:bg-emerald-900/20 group-hover:text-emerald-400 transition-colors">Coming Soon</span>
                     </button>
@@ -589,7 +675,7 @@ const HomePage = ({ onNavigate }) => {
                          </div>
                          <div className="flex-1 text-left space-y-1">
                              <h3 className="text-xl font-serif text-gray-200 group-hover:text-white transition-colors">Good Quotes</h3>
-                             <p className="text-xs text-gray-500 uppercase tracking-widest group-hover:text-gray-400">Curated wisdom for clarity</p>
+                             <p className="text-xs text-gray-500 uppercase tracking-widest group-hover:text-gray-400 hidden md:block">Curated wisdom for clarity</p>
                          </div>
                          <span className="text-[10px] bg-gray-900 text-gray-500 px-2 py-1 rounded uppercase tracking-wider group-hover:bg-rose-900/20 group-hover:text-rose-400 transition-colors">Coming Soon</span>
                     </button>
@@ -604,6 +690,7 @@ const HomePage = ({ onNavigate }) => {
    ========================================= */
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // VIEW MAPPING FOR GLASS NAV
   const views = ['home', 'vocab', 'very', 'principles', 'quotes'];
@@ -611,8 +698,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#313131] text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative container">
-      {/* GLOBAL CSS FOR NEW BACKGROUND & PRISM & GLASS NAV */}
+      {/* GLOBAL CSS & FONTS */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
         /* --- Background Animation --- */
         .container {
           width: 100%;
@@ -630,19 +719,6 @@ export default function App() {
           75% { background-position: 0px 20px; }
           100% { background-position: 0px 0px; }
         }
-
-        /* --- Prism Object CSS --- */
-        .scene { width: 320px; height: 320px; perspective: 900px; }
-        .prism { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 20s linear infinite; }
-        .facet {
-          position: absolute; inset: 0; border-radius: 18px;
-          background: linear-gradient(120deg, rgba(255, 255, 255, 0.15), rgba(255, 200, 120, 0.15), rgba(120, 180, 255, 0.15));
-          backdrop-filter: blur(2px); transform-origin: center;
-          clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%);
-          box-shadow: inset 0 0 30px rgba(255,255,255,0.15), 0 0 40px rgba(120,180,255,0.15);
-        }
-        .void { position: absolute; inset: 25%; border-radius: 50%; background: radial-gradient(circle, #000 60%, transparent 70%); transform: translateZ(1px); }
-        @keyframes rotate { from { transform: rotateX(18deg) rotateY(0deg); } to { transform: rotateX(18deg) rotateY(360deg); } }
 
         /* --- Glass Radio Nav --- */
         .glass-nav-container {
@@ -667,8 +743,12 @@ export default function App() {
         }
       `}</style>
 
-      {/* FLOATING HEADER (Bottom on desktop for ergonomics, Top on mobile) */}
-      <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      {/* BACKGROUND & CURSOR */}
+      <InteractiveBackground />
+      <CustomCursor />
+
+      {/* DESKTOP NAV (Hidden on Mobile) */}
+      <div className="fixed bottom-8 left-0 right-0 z-50 justify-center pointer-events-none hidden md:flex">
           <div className="glass-nav-container pointer-events-auto">
               <div 
                   className="glass-glider" 
@@ -687,7 +767,38 @@ export default function App() {
           </div>
       </div>
 
-      <div className="min-h-screen w-full">
+      {/* MOBILE NAV (Hidden on Desktop) */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden flex flex-col items-end gap-4">
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-gray-800 rounded-2xl p-2 min-w-[160px] shadow-2xl mb-2"
+              >
+                {views.map((view) => (
+                  <button
+                    key={view}
+                    onClick={() => { setCurrentView(view); setIsMobileMenuOpen(false); }}
+                    className={`w-full text-right px-4 py-3 text-sm font-semibold uppercase tracking-widest rounded-xl transition-colors ${currentView === view ? 'text-white bg-white/10' : 'text-gray-500 hover:text-white'}`}
+                  >
+                    {view === 'very' ? 'Very' : view.charAt(0).toUpperCase() + view.slice(1)}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
+          >
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </button>
+      </div>
+
+      <div className="w-full min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pt-20 pb-40 px-4 md:px-8">
           <AnimatePresence mode="wait">
               {currentView === 'home' && <HomePage key="home" onNavigate={setCurrentView} />}
               {currentView === 'vocab' && <VocabSliderTool key="vocab" onBack={() => setCurrentView('home')} />}
